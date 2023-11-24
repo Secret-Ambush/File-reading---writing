@@ -250,7 +250,7 @@ int main() {
     vector<TeachingAssistant> teachersAssistants = getTAData(student_arr, instructors);
 
     cout << "Vectors ready ...  Creating Output file" << endl << endl;
-    cout << "File name: output.txt" << endl;
+    cout << "File name: output.txt" << endl << endl;
 
     // Question 1
     std::cout << "Question 1" << std::endl;
