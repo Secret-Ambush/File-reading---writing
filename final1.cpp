@@ -231,6 +231,82 @@ vector<TeachingAssistant> getTAData(const vector<Student>& students, const vecto
     return teachingAssistants;
 }
 
+void putdata(const std::vector<Employee>& employee_arr, const std::vector<TeachingAssistant>& teachersAssistants, const std::vector<Student>& student_arr) {
+    std::ofstream outputFile("output.txt");
+
+    // Writing data to the file
+    outputFile << "Question 1" << std::endl;
+    for (const auto& emp : employee_arr) {
+        outputFile << emp.employeeID << " " << emp.pay << std::endl;
+    }
+
+    outputFile << std::endl << "Question 2" << std::endl;
+    for (const auto& stud : teachersAssistants) {
+        outputFile << stud.studentID << " " << stud.studentName << " ";
+        for (const auto& course : stud.coursesTeaching) {
+            outputFile << course << " ";
+        }
+        outputFile << std::endl;
+    }
+
+    outputFile << std::endl << "Question 3" << std::endl;
+    for (const auto& student : student_arr) {
+        bool isTA = false;
+        for (const auto& ta : teachersAssistants) {
+            if (student.studentID == ta.studentID) {
+                isTA = true;
+                break;
+            }
+        }
+        if (!isTA) {
+            outputFile << student.studentID << " " << student.studentName << std::endl;
+        }
+    }
+
+    outputFile << std::endl << "Question 4" << std::endl;
+    for (const auto& student : student_arr) {
+        student.displayInfo(outputFile);
+    }
+
+    outputFile.close();
+}
+
+void listdata(const std::vector<Employee>& employee_arr, const std::vector<TeachingAssistant>& teachersAssistants, const std::vector<Student>& student_arr) {
+    std::cout << "Question 1" << std::endl;
+    for (const auto& emp : employee_arr) {
+        std::cout << emp.employeeID << " " << emp.pay << std::endl;
+    }
+
+    std::cout << std::endl << "Question 2" << std::endl;
+    std::cout << "STUDENT_ID STUDENT_NAME COURSE_TEACHING" << std::endl;
+    for (const auto& stud : teachersAssistants) {
+        std::cout << stud.studentID << " " << stud.studentName << " ";
+        for (const auto& course : stud.coursesTeaching) {
+            std::cout << course << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    std::cout << std::endl << "Question 3" << std::endl;
+    for (const auto& student : student_arr) {
+        bool isTA = false;
+        for (const auto& ta : teachersAssistants) {
+            if (student.studentID == ta.studentID) {
+                isTA = true;
+                break;
+            }
+        }
+        if (!isTA) {
+            std::cout << student.studentID << " " << student.studentName << std::endl;
+        }
+    }
+
+    std::cout << std::endl << "Question 4" << std::endl;
+    for (const auto& student : student_arr) {
+        student.displayInfo();
+    }
+}
+
 int main() {
     int employeeSize = 0, studentSize = 0, instructorSize = 0;
     std::ofstream outputFile("output.txt");
@@ -252,69 +328,9 @@ int main() {
     cout << "Vectors ready ...  Creating Output file" << endl << endl;
     cout << "File name: output.txt" << endl << endl;
 
-    // Question 1
-    std::cout << "Question 1" << std::endl;
-    for (const auto& emp : employee_arr) {
-        std::cout << emp.employeeID << " " << emp.pay << std::endl;
-    }
-
-    outputFile << "Question 1" << endl;
-    for (const auto& emp : employee_arr) {
-        outputFile << emp.employeeID << " " << emp.pay << std::endl;
-    }
-
-    // Question 2
-    std::cout << std::endl;
-    outputFile << std::endl;
-    std::cout << "Question 2" << std::endl;
-    outputFile << "Question 2" << std::endl;
-    cout << "STUDENT_ID STUDENT_NAME COURSE_TEACHING" << std::endl;
-    outputFile << "STUDENT_ID STUDENT_NAME COURSE_TEACHING" << std::endl;
-    for (const auto& stud : teachersAssistants) {
-        std::cout << stud.studentID << " " << stud.studentName << " ";
-        for (const auto& course : stud.coursesTeaching) {
-            std::cout << course << " ";
-        }
-        std::cout << std::endl;
-
-        outputFile << stud.studentID << " " << stud.studentName << " ";
-        for (const auto& course : stud.coursesTeaching) {
-            outputFile << course << " ";
-        }
-        outputFile << std::endl;
-    }
-
-
-    // Question 3
-    std::cout << std::endl;
-    outputFile << std::endl;
-    std::cout << "Question 3" << std::endl;
-    outputFile << "Question 3" << std::endl;
-    for (const auto& student : student_arr) {
-        bool isTA = false;
-        for (const auto& ta : teachersAssistants) {
-            if (student.studentID == ta.studentID) {
-                isTA = true;
-                break;
-            }
-        }
-        if (!isTA) {
-            std::cout << student.studentID << " " << student.studentName << std::endl;
-            outputFile << student.studentID << " " << student.studentName << std::endl;
-        }
-    }
-
-    // Question 4
-    std::cout << std::endl;
-    outputFile << std::endl;
-    std::cout << "Question 4" << std::endl;
-    outputFile << "Question 4" << std::endl;
-    for (const auto& student : student_arr) {
-        student.displayInfo();
-        student.displayInfo(outputFile);
-    }
-
-
+    putdata(employee_arr, teachersAssistants, student_arr);
+    listdata(employee_arr, teachersAssistants, student_arr);
+    
     // Close the output file stream
     outputFile.close();
 
