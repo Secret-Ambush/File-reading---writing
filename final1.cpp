@@ -15,10 +15,10 @@ public:
 
     Employee() {}
 
-    Employee(string empID, string empName, string pay) {
+    Employee(string empID, string empName, string payo) {
         employeeID = empID;
         employeeName = empName;
-        this->pay = pay;
+        pay = payo;
     }
 
     // Method to display employee information
@@ -41,7 +41,6 @@ public:
     Student(string stuID, string stuName, string feesPaid, const vector<string>& courses)
         : studentID(stuID), studentName(stuName), tuitionFeesPaid(feesPaid), coursesStudying(courses) {}
 
-    // Method to display student information
     void displayInfo() const {
         cout << studentID << " " << studentName << " " << tuitionFeesPaid
             << " ";
@@ -51,9 +50,9 @@ public:
         cout << endl;
     }
 
+    // Outputing to files
     void displayInfo(std::ofstream& outputFile) const {
         if (outputFile.is_open()) {
-            // Output student information to the file
             outputFile << studentID << " " << studentName << " " << tuitionFeesPaid << " ";
             for (const auto& course : coursesStudying) {
                 outputFile << course << " ";
@@ -162,22 +161,25 @@ vector<Student> getStudData(const string& filename, int& size)
 vector<Instructor> getInstData(const string& instructorFilename, const string& employeeFilename) {
     vector<Instructor> instructors;
 
-    // Read employee details to map IDs to names
-    unordered_map<string, string> employeeNames;
-    ifstream empFile(employeeFilename);
+    std::vector<Employee> employeeDetails;
+
+    std::ifstream empFile(employeeFilename);
     if (empFile.is_open()) {
-        string line;
+        std::string line;
         while (getline(empFile, line)) {
-            stringstream ss(line);
-            string empID, empName, pay;
-            if (ss >> empID >> empName >> pay) {
-                employeeNames[empID] = empName;
+            std::stringstream ss(line);
+            Employee emp;
+
+            if (ss >> emp.employeeID >> emp.employeeName >> emp.pay) {
+                employeeDetails.push_back(emp);
             }
         }
+
         empFile.close();
-    } else {
-        cout << "Unable to open employee file: " << employeeFilename << endl;
-        return instructors;
+    } 
+    
+    else {
+        std::cout << "Unable to open employee file: " << employeeFilename << std::endl;
     }
 
     // Read instructor details including courses teaching
@@ -196,11 +198,19 @@ vector<Instructor> getInstData(const string& instructorFilename, const string& e
             while (ss >> course) {
                 courses.push_back(course);
             }
-            if (employeeNames.find(empID) != employeeNames.end()) {
-                string empName = employeeNames[empID];
-                Instructor inst(empID, empName, "", courses);
-                instructors.push_back(inst);
+
+            string empName = "";
+
+            for (const auto& employee : employeeDetails) {
+                if (employee.employeeID == empID) {
+                    empName = employee.employeeName;
+                    break;
+                }
             }
+
+            Instructor inst(empID, empName, "", courses);
+                instructors.push_back(inst);
+            
         }
     }
 
@@ -313,8 +323,8 @@ int main() {
 
     cout << "Reading Employees File \n";
     // Read Employee data from file
-    vector<Employee> employee_arr = getEmpData("Employee.txt", employeeSize);    
-
+    vector<Employee> employee_arr = getEmpData("Employee.txt", employeeSize);
+    
     cout << "Reading Students File \n";
     // Read Student data from file
     vector<Student> student_arr = getStudData("student.txt", studentSize);
